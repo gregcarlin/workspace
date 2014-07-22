@@ -1,8 +1,13 @@
 package com.gregorycarlin.pathfinder;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+
 import com.gregorycarlin.pathfinder.nodes.Node;
 
 import acm.graphics.GLine;
+import acm.graphics.GPoint;
 
 /**
  * A representation of a graph node.
@@ -86,5 +91,25 @@ public class Edge extends GLine {
 			return other.getNode1().equals(getNode1()) && other.getNode2().equals(getNode2());
 		}
 		return false;
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		
+		GPoint start = getStartPoint();
+		GPoint end = getEndPoint();
+		String text = Long.toString(Math.round(cost));
+		FontMetrics fm = g.getFontMetrics();
+		int w = fm.stringWidth(text);
+		int h = fm.getHeight();
+		int x = (int) ((start.getX() + end.getX()) / 2 - w / 2);
+		int y = (int) ((start.getY() + end.getY()) / 2 - h / 2);
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(x - 1, y, w + 2, h);
+		g.setColor(Color.WHITE);
+		g.drawString(text, x, (int) (y + h * 0.8));
+		g.setColor(Color.BLACK);
 	}
 }

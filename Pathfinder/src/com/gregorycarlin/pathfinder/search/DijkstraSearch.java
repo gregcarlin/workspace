@@ -11,12 +11,12 @@ import java.util.Queue;
 import com.gregorycarlin.pathfinder.Edge;
 import com.gregorycarlin.pathfinder.nodes.Node;
 
-public class DijkstraSearch implements Search { // TODO make this work
+public class DijkstraSearch implements Search {
 
 	@Override
 	public List<Node> findPath(Node start, Node end, List<Node> allNodes) {
 		final Map<Node,Double> dists = new HashMap<Node,Double>();
-		final Map<Node,Node> previous = new HashMap<Node,Node>();
+		final Map<Node,Node> traversals = new HashMap<Node,Node>();
 		final Queue<Node> fringe = new PriorityQueue<Node>(allNodes.size()-1, new Comparator<Node>() {
 			@Override
 			public int compare(Node arg0, Node arg1) {
@@ -27,7 +27,6 @@ public class DijkstraSearch implements Search { // TODO make this work
 		for(Node n : allNodes) {
 			if(!n.equals(start)) {
 				dists.put(n, Double.MAX_VALUE);
-				previous.put(n, null);
 			}
 			fringe.add(n);
 		}
@@ -35,26 +34,26 @@ public class DijkstraSearch implements Search { // TODO make this work
 		while(!fringe.isEmpty()) {
 			Node u = fringe.poll();
 			
-			if(u.equals(end)) {
-				List<Node> path = new LinkedList<Node>();
-				Node n = end;
-				while(previous.get(n) != null) {
-					path.add(0, n);
-					n = previous.get(n);
-				}
-				return path;
-			}
-			
 			for(Edge e : u.getEdges()) {
 				Node v = e.getNodeThatsNot(u);
 				double alt = dists.get(u) + e.getCost();
+				System.out.printf("cost to %s is %f%n", v, alt);
 				if(alt < dists.get(v)) {
+					System.out.printf("adding %s with dist %f%n", v, alt);
 					dists.put(v, alt);
-					previous.put(v, u);
+					traversals.put(v, u);
 				}
 			}
 		}
 		
-		return null;
+		if(dists.get(end) == Double.MAX_VALUE) return null;
+		
+		List<Node> path = new LinkedList<Node>();
+		Node n = end;
+		path.add(n);
+		while((n = traversals.get(n)) != null) {
+			path.add(0, n);
+		}
+		return path;
 	}
 }
