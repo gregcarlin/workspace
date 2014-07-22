@@ -59,28 +59,6 @@ public class AI implements Solver {
         if(winner == null) {
         	State[] children = s.getChildren();
         	if(children.length == 0) {
-        		/*int adj = 0;
-        		for(int i=0; i<Board.NUM_ROWS; i++) {
-        			for(int j=0; j<Board.NUM_COLS; j++) {
-        				Board.Player start = b.getPlayer(i, j);
-        				if(start == null) continue;
-        				for(int[] delta : Board.DELTAS) {
-        					assert delta.length == 2;
-        					int row = i + delta[0];
-        					int col = j + delta[1];
-        					if(b.isValidTile(row, col)) {
-        						Board.Player p = b.getPlayer(row, col);
-        						if(p != start) continue;
-        						if(p == player) {
-        							adj++; // increase value for adjacent tiles of ours
-        						} else {
-        							adj--; // decrease value for adjacent tiles not ours
-        						}
-        					}
-        				}
-        			}
-        		}
-        		s.setValue(adj);*/
         		int val = 0;
         		for(Board.Player[] wins : b.winLocations()) {
         			assert wins.length == 4;
